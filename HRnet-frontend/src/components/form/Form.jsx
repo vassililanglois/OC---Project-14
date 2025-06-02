@@ -1,66 +1,47 @@
-import { useState } from "react";
 import FormInput from "./FormInput";
-import Modal from "./Modal";
-import { states } from "../../data/states";
+import Modal from "../Modal/src/Modal";
+import { states } from "../../config/formStates";
 import confetti from "canvas-confetti";
+import { useDispatch, useSelector } from "react-redux";
+import { openModal, closeModal } from "../../features/modal/modalSlice";
+import { updateField, resetForm } from "../../features/form/formSlice";
+import { addEmployee } from "../../features/employee/employeeSlice";
 
 export default function Form() {
-  const initialFormState = {
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
-    startDate: "",
-    street: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    department: "",
+  const dispatch = useDispatch();
+  const isOpen = useSelector((state) => state.modal.isOpen);
+  const form = useSelector((state) => state.form);
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    dispatch(updateField({ field: id.replace("-", ""), value }));
   };
 
-  const [form, setForm] = useState(initialFormState);
-
-  //const inputsReset = () => setForm(initialFormState);
-
-  const [showModal, setShowModal] = useState(false);
+  const handleSelectChange = (e) => {
+    const { id, value } = e.target;
+    dispatch(updateField({ field: id, value }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const employees = JSON.parse(localStorage.getItem("employees")) || [];
+    dispatch(addEmployee({ ...form }));
+    dispatch(openModal());
+    dispatch(resetForm());
 
-    const employee = {
-      firstName: form.firstName,
-      lastName: form.lastName,
-      dateOfBirth: form.dateOfBirth,
-      startDate: form.startDate,
-      street: form.street,
-      city: form.city,
-      state: form.state,
-      zipCode: form.zipCode,
-      department: form.department,
-    };
-
-    employees.push(employee);
-    localStorage.setItem("employees", JSON.stringify(employees));
-
-    //inputsReset();
-
-    setShowModal(true);
-
-    // Depuis la gauche vers la droite
     confetti({
       particleCount: 100,
       angle: 45,
       spread: 70,
       origin: { x: 0, y: 0.7 },
+      zIndex: 999,
     });
-
-    // Depuis la droite vers la gauche
     confetti({
       particleCount: 100,
       angle: 135,
       spread: 70,
       origin: { x: 1, y: 0.7 },
+      zIndex: 999,
     });
   };
 
@@ -69,39 +50,36 @@ export default function Form() {
       <form onSubmit={handleSubmit} id="create-employee">
         <FormInput
           content="First Name"
-          htmlFor="first-name"
+          htmlFor="firstName"
           type="text"
-          id="first-name"
+          id="firstName"
           value={form.firstName}
-          onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+          onChange={handleChange}
         />
-
         <FormInput
           content="Last Name"
-          htmlFor="last-name"
+          htmlFor="lastName"
           type="text"
-          id="last-name"
+          id="lastName"
           value={form.lastName}
-          onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+          onChange={handleChange}
         />
-
         <FormInput
           content="Date of Birth"
-          htmlFor="date-of-birth"
+          htmlFor="dateOfBirth"
           type="date"
-          id="date-of-birth"
+          id="dateOfBirth"
           value={form.dateOfBirth}
-          onChange={(e) => setForm({ ...form, dateOfBirth: e.target.value })}
+          onChange={handleChange}
           required
         />
-
         <FormInput
           content="Start Date"
-          htmlFor="start-date"
+          htmlFor="startDate"
           type="date"
-          id="start-date"
+          id="startDate"
           value={form.startDate}
-          onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+          onChange={handleChange}
         />
 
         <div className="address">
@@ -112,7 +90,7 @@ export default function Form() {
             type="text"
             id="street"
             value={form.street}
-            onChange={(e) => setForm({ ...form, street: e.target.value })}
+            onChange={handleChange}
           />
           <FormInput
             content="City"
@@ -120,16 +98,12 @@ export default function Form() {
             type="text"
             id="city"
             value={form.city}
-            onChange={(e) => setForm({ ...form, city: e.target.value })}
+            onChange={handleChange}
           />
 
           <label htmlFor="state">State</label>
-          <select
-            id="state"
-            value={form.state}
-            onChange={(e) => setForm({ ...form, state: e.target.value })}
-          >
-            <option value={form.state}>Select State</option>
+          <select id="state" value={form.state} onChange={handleSelectChange}>
+            <option value="">Select State</option>
             {states.map((st) => (
               <option key={st.abbreviation} value={st.abbreviation}>
                 {st.name}
@@ -139,11 +113,11 @@ export default function Form() {
 
           <FormInput
             content="Zip Code"
-            htmlFor="zip-code"
+            htmlFor="zipCode"
             type="number"
-            id="zip-code"
+            id="zipCode"
             value={form.zipCode}
-            onChange={(e) => setForm({ ...form, zipCode: e.target.value })}
+            onChange={handleChange}
           />
         </div>
 
@@ -151,7 +125,7 @@ export default function Form() {
         <select
           id="department"
           value={form.department}
-          onChange={(e) => setForm({ ...form, department: e.target.value })}
+          onChange={handleSelectChange}
         >
           <option value="">Select Department</option>
           <option value="Sales">Sales</option>
@@ -165,12 +139,9 @@ export default function Form() {
           Save
         </button>
 
-        {showModal && (
-          <Modal
-            content={"Employee Created!"}
-            onClose={() => setShowModal(false)}
-          ></Modal>
-        )}
+        <Modal isOpen={isOpen} onClose={() => dispatch(closeModal())}>
+          Employee Created!
+        </Modal>
       </form>
     </>
   );
