@@ -1,6 +1,6 @@
 import FormInput from "./FormInput";
 import Modal from "../Modal/src/Modal";
-import { states } from "../../config/formStates";
+import { states } from "../../config/states";
 import confetti from "canvas-confetti";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../../features/modal/modalSlice";
