@@ -1,0 +1,30 @@
+#create-employee {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem;
+  color: $primary-color;
+  font-weight: 500;
+
+  .address {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  select {
+    height: 2rem;
+    padding: 0 0.5rem;
+    border: solid 1px $primary-color;
+    border-radius: 5px;
+    background-color: $background-color;
+  }
+
+  .button-save {
+    transition: background-color 200ms ease;
+    &:hover {
+      background-color: $dark-color;
+    }
+  }
+}

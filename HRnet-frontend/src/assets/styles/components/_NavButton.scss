@@ -1,0 +1,14 @@
+.nav-button {
+  border-radius: 10px;
+  background-color: $primary-color;
+  padding: 1rem 2rem;
+  color: white;
+  font-weight: 600;
+  transform-origin: center;
+  transition: transform 200ms ease;
+
+  &:hover {
+    transform: scale(1.03);
+    background-color: $dark-color;
+  }
+}
