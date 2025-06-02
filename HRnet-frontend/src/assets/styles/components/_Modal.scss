@@ -7,8 +7,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba($background-color, $alpha: 0.5);
-
+  background-color: rgba($background-color, 0.5);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -62,6 +61,7 @@
 .modal-container.show {
   opacity: 1;
   pointer-events: auto;
+  background-color: rgba($background-color, 0.5);
 }
 
 .modal.show {
