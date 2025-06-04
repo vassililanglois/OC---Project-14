@@ -12,7 +12,6 @@ const employeeSlice = createSlice({
     addEmployee: (state, action) => {
       state.list.push(action.payload);
     },
-    // Optionnel : pour réinitialiser la liste
     resetEmployees: (state) => {
       state.list = [];
     },

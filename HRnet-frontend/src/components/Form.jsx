@@ -1,34 +1,42 @@
 import FormInput from "./FormInput";
-import Modal from "../Modal/src/Modal";
-import { states } from "../../config/states";
+import { states } from "../config/states";
 import confetti from "canvas-confetti";
 import { useDispatch, useSelector } from "react-redux";
-import { openModal, closeModal } from "../../features/modal/modalSlice";
-import { updateField, resetForm } from "../../features/form/formSlice";
-import { addEmployee } from "../../features/employee/employeeSlice";
+import { openModal, closeModal } from "../features/modal/modalSlice";
+import { updateField, resetForm } from "../features/form/formSlice";
+import { addEmployee } from "../features/employee/employeeSlice";
+import Modal from "react-simple-modal-by-vassili-langlois";
 
 export default function Form() {
+  // Dispatch
   const dispatch = useDispatch();
+
+  // Selectors
   const isOpen = useSelector((state) => state.modal.isOpen);
   const form = useSelector((state) => state.form);
 
+  // Function to handle the classic inputs changes
   const handleChange = (e) => {
     const { id, value } = e.target;
     dispatch(updateField({ field: id.replace("-", ""), value }));
   };
 
+  // Function to handle the select inputs changes
   const handleSelectChange = (e) => {
     const { id, value } = e.target;
     dispatch(updateField({ field: id, value }));
   };
 
+  // Function to handle the submission of the form
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Dispatches to  modify the state
     dispatch(addEmployee({ ...form }));
     dispatch(openModal());
     dispatch(resetForm());
 
+    // Confettis effect
     confetti({
       particleCount: 100,
       angle: 45,
