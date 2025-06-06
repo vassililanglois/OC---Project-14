@@ -13,7 +13,7 @@ const employeeSlice = createSlice({
       state.list.push(action.payload);
     },
     resetEmployees: (state) => {
-      state.list = [];
+      state.list = [mockData];
     },
   },
 });
